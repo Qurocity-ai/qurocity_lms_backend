@@ -303,7 +303,7 @@ router.post("/verify", async (req, res) => {
   }
 });
 
-// -----------------------------------User login api-----------------------------------
+// ----------------------------------- User login api for the lms frontend -----------------------------------
 
 // Authenticate user function
 const authenticateUser = async (email, password) => {
@@ -318,6 +318,8 @@ const authenticateUser = async (email, password) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   // console.log(req.body);
+
+  console.log("inside the function");
 
   try {
     const user = await authenticateUser(email, password);

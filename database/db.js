@@ -1,6 +1,3 @@
-
-
-
 import mongoose from "mongoose";
 import "dotenv/config.js";
 
@@ -11,7 +8,7 @@ import "dotenv/config.js";
 
 const connectToMongo = async () => {
 mongoose
-  .connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(mongoURI)
   .then(() => {
     console.log("*******************connection successful mongoose********************");
   })

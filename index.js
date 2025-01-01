@@ -1,4 +1,3 @@
-
 import connectToMongo from './database/db.js';
 import express from 'express';
 import cors from 'cors';
@@ -6,6 +5,7 @@ import payment1 from './routes/payment.js';
 // import payment1 from './routes/demo.js';
 import course from './routes/course.js';
 import lead from "./routes/leads.js";
+import UserwithQuizRouter from './routes/userwithquiz.js';
 
 // import path from 'path';  // Import the path module
 
@@ -24,17 +24,20 @@ app.use(cors());
 // Available routes    
 app.get('/', (req, res) => {
     res.send('S Buying the course')
-})
+});
 
 // // Route to serve the AMP page
 // app.get('/amp', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'public', 'amp.html'));
 // });
 
-app.use('/api/payment', payment1)
-app.use('/api',course);
-app.use('/lead',lead);
-    
+app.use('/api/payment', payment1);
+app.use('/api', course);
+app.use('/lead', lead);
+app.use('/api/quiz/',UserwithQuizRouter);
+
+
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })

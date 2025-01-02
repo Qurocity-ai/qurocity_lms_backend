@@ -43,7 +43,7 @@ const UserwithQuizRouter = express.Router();
 const JWT_SECRET = "Qurocity";
 
 UserwithQuizRouter.post("/auth",async(req,res)=>{
-    const { responses ,email,password} = req.body;
+    const { responses ,name,email,password} = req.body;
  
  try {
     // 1.First checke user is exist or not 
@@ -56,7 +56,7 @@ UserwithQuizRouter.post("/auth",async(req,res)=>{
     }
 // Now in order to register hash password 
 const hashedPassword = await bcrypt.hash(password,10);
-user = new UserwithQuiz({responses,email,password:hashedPassword});
+user = new UserwithQuiz({responses,name,email,password:hashedPassword});
 await user.save();
 // Update User regsiter succesefully we will not return becasue we want auto login 
  console.log("User registered succussfully!");

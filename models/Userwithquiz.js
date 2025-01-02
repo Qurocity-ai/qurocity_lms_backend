@@ -5,6 +5,9 @@ const UserQuizSchema = new Schema({
   responses:{
     type:Object,
   },
+  name:{
+    type:String,
+  },
   email:{
     type:String,
     required:true,

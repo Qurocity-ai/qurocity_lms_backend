@@ -9,6 +9,7 @@ const LessonSchema = new Schema({
   videos: [
     {
       title: { type: String, required: true },
+      subtitle:{type:String,required:true},
       url: { type: String, required: true }
     }
   ]

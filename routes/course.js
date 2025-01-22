@@ -91,18 +91,42 @@ router.put('/lessons/:id', async (req, res) => {
 });
 
 // get the lesson and video by passing the language name
+// router.get('/lessons/:language', async (req, res) => {
+//   const { language } = req.params;
+
+//   try {
+//     const lessons = await Lesson.find({ language })
+//       .sort({ lessonNumber: 1 }) // Sort by lessonNumber in ascending order
+//       .select('lessonNumber lessonTitle videos'); // Select specific fields
+
+//     res.json(lessons);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching lessons', error });
+//   }
+// });
+
+// Get lessons by language and optionally filter by level
 router.get('/lessons/:language', async (req, res) => {
-  const { language } = req.params;
+  const { language } = req.params; // Language from URL parameter
+  const { level } = req.query; // Level from query parameter
 
   try {
-    const lessons = await Lesson.find({ language })
+    // Build filter
+    const filter = { language };
+    if (level) {
+      filter.level = level; // Add level to the filter if provided
+    }
+
+    // Fetch lessons with filters applied
+    const lessons = await Lesson.find(filter)
       .sort({ lessonNumber: 1 }) // Sort by lessonNumber in ascending order
-      .select('lessonNumber lessonTitle videos'); // Select specific fields
+      .select('lessonNumber lessonTitle level videos'); // Select specific fields
 
     res.json(lessons);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching lessons', error });
   }
 });
+
 
 export default router;

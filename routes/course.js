@@ -31,14 +31,29 @@ router.post('/lessons', async (req, res) => {
 });
 
 // GET all lessons
-router.get('/lessons', async (req, res) => {
+// router.get('/lessons', async (req, res) => {
+//   try {
+//     const lessons = await Lesson.find();
+//     res.json(lessons);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+
+
+// GET all lessons with optional level filter
+router.get("/lessons", async (req, res) => {
   try {
-    const lessons = await Lesson.find();
+    const { level } = req.query; // Get level from query parameter
+    const filter = level ? { level } : {}; // If level is specified, filter by it
+    const lessons = await Lesson.find(filter); // Apply the filter to the query
     res.json(lessons);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // get course by id
 // router.get("/courses/:id", async (req, res) => {

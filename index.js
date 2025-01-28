@@ -6,7 +6,7 @@ import payment1 from './routes/payment.js';
 import course from './routes/course.js';
 import lead from "./routes/leads.js";
 import UserwithQuizRouter from './routes/userwithquiz.js';
-
+import IELTSRouter from "./routes/IELTS.js";
 // import path from 'path';  // Import the path module
 
 connectToMongo();
@@ -35,6 +35,8 @@ app.use('/api/payment', payment1);
 app.use('/api', course);
 app.use('/lead', lead);
 app.use('/api/quiz/',UserwithQuizRouter);
+app.use("/IELT",IELTSRouter);
+
 
 
 

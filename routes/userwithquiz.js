@@ -4,42 +4,7 @@ import UserwithQuiz from "../models/Userwithquiz.js";
 import jwt from "jsonwebtoken"
 const UserwithQuizRouter = express.Router();
 
-// Registration Route
-// UserwithQuizRouter.post("/register", async (req, res) => {
-//     const { responses, email, password } = req.body;
 
-//     try {
-//         // Check if the user already exists
-//         let user = await UserwithQuiz.findOne({ email });
-
-//         if (user) {
-//             return res.status(400).json({ error: "User already exists. Please login." });
-//         }
-
-//         // Validate responses (this can be skipped if no strict validation is needed)
-//         if (!responses || Object.keys(responses).length === 0) {
-//             return res.status(400).json({ error: "Please answer all the questions." });
-//         }
-
-//         // Hash the password
-//         const hashedPassword = await bcrypt.hash(password, 10);
-
-//         // Create a new user with responses, email, and password
-//         user = new UserwithQuiz({ responses, email, password: hashedPassword });
-//         await user.save();
-
-//         res.status(201).json({ msg: "User registered successfully!" });
-//     } catch (error) {
-//         console.error("Error:", error.message);
-//         res.status(500).json({ error: "Error processing request." });
-//     }
-// });
-
-
-// Register and login both at the same time 
-// Let's create auth route for that 
-
-// Scret Key 
 const JWT_SECRET = "Qurocity";
 
 UserwithQuizRouter.post("/auth",async(req,res)=>{
@@ -82,5 +47,80 @@ await user.save();
     res.status(500).json({error:"Error processing request."});
  }
 })
+
+// User Registration Route
+UserwithQuizRouter.post("/register", async (req, res) => {
+    const { responses, name, email, password } = req.body;
+
+    try {
+        // Validate required fields
+        if (!responses || Object.keys(responses).length === 0) {
+            return res.status(400).json({ error: "Please answer all questions to help us suggest better courses!" });
+        }
+        if (!name || !email || !password) {
+            return res.status(400).json({ error: "All fields are required!" });
+        }
+
+        // Check if user already exists
+        let user = await UserwithQuiz.findOne({ email });
+        if (user) {
+            return res.status(400).json({ error: "User already registered. Please log in." });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create new user
+        user = new UserwithQuiz({ responses, name, email, password: hashedPassword });
+        await user.save();
+
+        console.log("User registered successfully!");
+
+        // Generate token
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
+
+        res.status(201).json({ message: "User registered successfully!", token });
+
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ error: "Error processing request." });
+    }
+});
+
+
+// User Login Route
+UserwithQuizRouter.post("/login", async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Validate required fields
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required!" });
+        }
+
+        // Check if user exists
+        const user = await UserwithQuiz.findOne({ email });
+        if (!user) {
+            return res.status(401).json({ error: "Invalid credentials!" });
+        }
+
+        // Validate password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Invalid credentials!" });
+        }
+
+        console.log("User logged in successfully!");
+
+        // Generate token
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
+
+        res.status(200).json({ message: "User logged in successfully!", token });
+
+    } catch (error) {
+        console.error("Error:", error.message);
+        res.status(500).json({ error: "Error processing request." });
+    }
+});
 
 export default UserwithQuizRouter;
